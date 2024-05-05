@@ -85,7 +85,10 @@ return {
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
+      vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Search in current GIT project' })
+      vim.keymap.set('n', '<leader>ps', function()
+        builtin.grep_string { search = vim.fn.input 'Grep > ' }
+      end, { desc = '[P]roject [S]earch' })
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
