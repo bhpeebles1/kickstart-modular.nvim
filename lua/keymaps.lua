@@ -1,6 +1,20 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- Set hotkeys for git mergetool
+-- Define keymaps for picking changes in merge conflicts
+vim.keymap.set('n', '<leader>gf', function()
+  vim.cmd('diffget LO')
+end, { desc = 'Pick changes from Local (Left) file' })
+
+vim.keymap.set('n', '<leader>gj', function()
+  vim.cmd('diffget RE')
+end, { desc = 'Pick changes from Remote (Right) file' })
+
+vim.keymap.set('n', '<leader>gb', function()
+  vim.cmd('diffget BASE')
+end, { desc = 'Pick changes from Base (Common Ancestor) file' })
+
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -26,8 +40,8 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
 -- Keep screen centered while searching
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', 'n', 'nzz')
+vim.keymap.set('n', 'N', 'Nzz')
 
 -- Delete highlighted word and add to void register (paste without yanking)
 vim.keymap.set('x', '<leader>p', '"_dP')
@@ -41,10 +55,11 @@ vim.keymap.set('n', '<leader>Y', '"+y')
 vim.keymap.set('n', 'Q', '<nop>')
 
 -- Quickfix navigation to find errors or something lol
-vim.keymap.set('n', '<C-k>', '<cmd>cnext<CR>zz')
-vim.keymap.set('n', '<C-j>', '<cmd>cprev<CR>zz')
+vim.keymap.set('n', '<leader><C-n>', '<cmd>cnext<CR>zz')
+vim.keymap.set('n', '<leader><C-p>', '<cmd>cprev<CR>zz')
 vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz')
 vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz')
+vim.keymap.set('n', '<C-v>', '<C-q>')
 
 -- Find and replace realtime
 vim.keymap.set('n', '<leader>rr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -52,7 +67,7 @@ vim.keymap.set('n', '<leader>rr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 -- Double space :so
 vim.keymap.set('n', '<leader>so', function()
   vim.cmd 'so'
-end)
+end, { desc = 'Run :so command' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
