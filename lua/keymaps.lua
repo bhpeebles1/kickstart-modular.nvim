@@ -4,15 +4,15 @@
 -- Set hotkeys for git mergetool
 -- Define keymaps for picking changes in merge conflicts
 vim.keymap.set('n', '<leader>gf', function()
-  vim.cmd('diffget LO')
+  vim.cmd 'diffget LO'
 end, { desc = 'Pick changes from Local (Left) file' })
 
 vim.keymap.set('n', '<leader>gj', function()
-  vim.cmd('diffget RE')
+  vim.cmd 'diffget REM'
 end, { desc = 'Pick changes from Remote (Right) file' })
 
 vim.keymap.set('n', '<leader>gb', function()
-  vim.cmd('diffget BASE')
+  vim.cmd 'diffget BASE'
 end, { desc = 'Pick changes from Base (Common Ancestor) file' })
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
@@ -94,6 +94,9 @@ vim.keymap.set('n', '<leader><C-k>', '<C-w><C-k>', { desc = 'Move focus to the u
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- Set line numbers in netrw
+vim.cmd [[let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro']]
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
