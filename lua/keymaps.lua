@@ -52,7 +52,7 @@ vim.keymap.set('n', '<leader>rr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 -- Double space :so
 vim.keymap.set('n', '<leader>so', function()
   vim.cmd 'so'
-end)
+end, { desc = 'Run :so cmd' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
