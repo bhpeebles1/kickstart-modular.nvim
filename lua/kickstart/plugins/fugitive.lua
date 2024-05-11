@@ -27,7 +27,7 @@ return {
           end, vim.tbl_extend('force', opts, { desc = 'Git pull --rebase' }))
 
           -- Set up tracking branch on push with description
-          vim.keymap.set('n', '<leader>t', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Setup tracking branch' }))
+          vim.keymap.set('n', '<leader>po', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Setup tracking branch' }))
         end,
       })
 
