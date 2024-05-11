@@ -47,11 +47,18 @@ return {
         end,
       })
       vim.keymap.set('n', '<leader>gb', function()
-        local branch_name = vim.fn.input 'Branch name: '
-        if branch_name ~= '' then
-          vim.cmd('Git checkout -b ' .. branch_name)
+        -- Check if in the Git branches buffer
+        if vim.bo.filetype == 'fugitive' and vim.api.nvim_buf_get_name(0):match 'fugitive://.*/%.git//' then
+          -- Execute the 'coo' command to checkout the branch under the cursor
+          vim.cmd 'normal! coo'
+        else
+          -- Not in the branches buffer, ask for a branch name to create a new one
+          local branch_name = vim.fn.input 'Branch name: '
+          if branch_name ~= '' then
+            vim.cmd('Git checkout -b ' .. branch_name)
+          end
         end
-      end, { desc = 'Checkout new branch' })
+      end, { desc = 'Smart Checkout Branch' })
       vim.keymap.set('n', '<leader>gv', function()
         vim.cmd 'Git branch'
       end, { desc = 'View Git branches' })
