@@ -27,7 +27,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Enter current file directory
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = "Exit into current open file's directory" })
 
 -- Move selected text up and down
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
