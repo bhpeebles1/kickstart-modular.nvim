@@ -17,17 +17,27 @@ return {
           local opts = { buffer = bufnr, remap = false }
 
           -- Keymap for pushing changes with description
-          vim.keymap.set('n', '<leader>gp', function()
-            vim.cmd 'Git push'
-          end, vim.tbl_extend('force', opts, { desc = 'Git push' }))
+          local function push_with_upstream_check()
+            local branch_info = vim.fn.systemlist 'git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+
+            if vim.v.shell_error ~= 0 then -- No upstream set
+              local answer = vim.fn.input "No upstream set. Push with setting upstream to 'origin'? (y/n): "
+              if answer == 'y' then
+                vim.cmd 'Git push -u origin HEAD'
+              else
+                print 'Push cancelled.'
+              end
+            else
+              vim.cmd 'Git push'
+            end
+          end
+
+          vim.keymap.set('n', '<leader>gp', push_with_upstream_check, { desc = 'Git push with upstream check' })
 
           -- Keymap for pulling and rebasing with description
           vim.keymap.set('n', '<leader>gP', function()
             vim.cmd 'Git pull --rebase'
           end, vim.tbl_extend('force', opts, { desc = 'Git pull --rebase' }))
-
-          -- Set up tracking branch on push with description
-          vim.keymap.set('n', '<leader>go', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Git push origin' }))
         end,
       })
 
