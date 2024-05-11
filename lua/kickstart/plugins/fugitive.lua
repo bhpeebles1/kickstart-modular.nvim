@@ -34,7 +34,6 @@ return {
       -- Keymaps for diffget operations with descriptions
       vim.keymap.set('n', 'gf', '<cmd>diffget //2<CR>', { desc = 'Get diff from LEFT' })
       vim.keymap.set('n', 'gj', '<cmd>diffget //3<CR>', { desc = 'Get diff from RIGHT' })
-
       -- Keymap to cancel a commit after pressing cc
 
       -- In your Neovim configuration (init.lua or similar file)
@@ -51,7 +50,8 @@ return {
           vim.cmd('Git checkout -b ' .. branch_name)
         end
       end, { desc = 'Checkout new branch' })
-      vim.keymap.set('n', '<leader>gv', ':Gbranch<CR>', { desc = 'View Git branches' })
+      vim.keymap.set('n', '<leader>gv', ':Git branch<CR>', { desc = 'View Git branches' })
+      vim.keymap.set('n', '<leader>gd', ':Gdiff', { desc = 'Open Git diff mergetool' })
     end,
   },
 }
