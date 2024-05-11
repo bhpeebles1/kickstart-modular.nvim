@@ -51,6 +51,7 @@ return {
           vim.cmd('Git checkout -b ' .. branch_name)
         end
       end, { desc = 'Checkout new branch' })
+      vim.keymap.set('n', '<leader>gv', ':Gbranch<CR>', { desc = 'View Git branches' })
     end,
   },
 }
