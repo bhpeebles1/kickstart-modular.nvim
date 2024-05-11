@@ -17,27 +17,28 @@ return {
           local opts = { buffer = bufnr, remap = false }
 
           -- Keymap for pushing changes with description
-          vim.keymap.set('n', '<leader>pp', function()
+          vim.keymap.set('n', '<leader>gp', function()
             vim.cmd 'Git push'
           end, vim.tbl_extend('force', opts, { desc = 'Git push' }))
 
           -- Keymap for pulling and rebasing with description
-          vim.keymap.set('n', '<leader>PP', function()
+          vim.keymap.set('n', '<leader>gP', function()
             vim.cmd 'Git pull --rebase'
           end, vim.tbl_extend('force', opts, { desc = 'Git pull --rebase' }))
 
           -- Set up tracking branch on push with description
-          vim.keymap.set('n', '<leader>po', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Setup tracking branch' }))
+          vim.keymap.set('n', '<leader>go', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Git push origin' }))
         end,
       })
 
       -- Keymaps for diffget operations with descriptions
-      vim.keymap.set('n', 'gf', '<cmd>diffget //2<CR>', { desc = 'Get diff from LEFT' })
-      vim.keymap.set('n', 'gj', '<cmd>diffget //3<CR>', { desc = 'Get diff from RIGHT' })
+      vim.keymap.set('n', 'gf', function()
+        vim.cmd 'diffget //2'
+      end, { desc = 'Get diff from LEFT' })
+      vim.keymap.set('n', 'gj', function()
+        vim.cmd 'diffget //3'
+      end, { desc = 'Get diff from RIGHT' })
 
-      -- Keymap to cancel a commit after pressing cc
-
-      -- In your Neovim configuration (init.lua or similar file)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'gitcommit',
         callback = function()
@@ -51,7 +52,18 @@ return {
           vim.cmd('Git checkout -b ' .. branch_name)
         end
       end, { desc = 'Checkout new branch' })
-      vim.keymap.set('n', '<leader>gv', ':Gbranch<CR>', { desc = 'View Git branches' })
+      vim.keymap.set('n', '<leader>gv', function()
+        vim.cmd 'Git branch'
+      end, { desc = 'View Git branches' })
+      vim.keymap.set('n', '<leader>gd', function()
+        vim.cmd 'Gdiff'
+      end, { desc = 'Open Git diff mergetool' })
+      vim.keymap.set('n', '<leader>gm', function()
+        local branch_name = vim.fn.input 'Branch name: '
+        if branch_name ~= '' then
+          vim.cmd('Git merge --no-ff ' .. branch_name)
+        end
+      end, { desc = 'Merge branch' })
     end,
   },
 }
