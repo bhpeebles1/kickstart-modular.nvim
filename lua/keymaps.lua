@@ -1,9 +1,10 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
--- Set hotkeys for git mergetool
--- Define keymaps for picking changes in merge conflicts
-vim.keymap.set('n', '<leader>gf', function()
+-- -- Set hotkeys for git mergetool
+-- -- Define keymaps for picking changes in merge conflicts
+-- ONLY UNCOMMENT IF FUGITIVE DOESN'T WORK I GUESS - PROBABLY DELETE LATER
+--[[ vim.keymap.set('n', '<leader>gf', function()
   vim.cmd 'diffget LO'
 end, { desc = 'Pick changes from Local (Left) file' })
 
@@ -13,7 +14,7 @@ end, { desc = 'Pick changes from Remote (Right) file' })
 
 vim.keymap.set('n', '<leader>gb', function()
   vim.cmd 'diffget BASE'
-end, { desc = 'Pick changes from Base (Common Ancestor) file' })
+end, { desc = 'Pick changes from Base (Common Ancestor) file' }) ]]
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
