@@ -21,13 +21,12 @@ return {
             vim.cmd 'Git push'
           end, vim.tbl_extend('force', opts, { desc = 'Git push' }))
 
+          vim.keymap.set('n', '<leader>go', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Git push origin' }))
+
           -- Keymap for pulling and rebasing with description
           vim.keymap.set('n', '<leader>gP', function()
             vim.cmd 'Git pull --rebase'
           end, vim.tbl_extend('force', opts, { desc = 'Git pull --rebase' }))
-
-          -- Set up tracking branch on push with description
-          vim.keymap.set('n', '<leader>go', ':Git push -u origin ', vim.tbl_extend('force', opts, { desc = 'Git push origin' }))
         end,
       })
 
@@ -46,24 +45,46 @@ return {
           vim.keymap.set('n', '<leader>gc', ':q!<CR>', { buffer = true, desc = 'Cancel Commit' })
         end,
       })
-      vim.keymap.set('n', '<leader>gb', function()
-        local branch_name = vim.fn.input 'Branch name: '
-        if branch_name ~= '' then
-          vim.cmd('Git checkout -b ' .. branch_name)
+      -- Common function to extract branch name and execute a provided Git command
+      local function execute_git_command_with_branch(cmd_base)
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        -- Check if the buffer is likely a temporary buffer used for git operations
+        if buf_name:match 'nvim%.%d+[/\\].+' then
+          -- Run the command exactly as it would be in Vimscript
+          local branch_name = vim.fn.expand '<cfile>'
+          if branch_name ~= '' then
+            vim.cmd(cmd_base .. ' ' .. branch_name)
+            print(cmd_base .. ' ' .. branch_name)
+          else
+            print 'No branch name found under cursor.'
+          end
+        else
+          -- Not in a branch-list buffer, prompt for a new branch name
+          local branch_name = vim.fn.input 'Branch name: '
+          if branch_name ~= '' then
+            vim.cmd(cmd_base .. ' ' .. branch_name)
+          end
         end
-      end, { desc = 'Checkout new branch' })
+      end
+      -- Keymap for checking out a branch (checks out branch being hovered if there is one)
+      vim.keymap.set('n', '<leader>gb', function()
+        execute_git_command_with_branch 'Git checkout'
+      end, { desc = 'Smart Checkout Branch' })
+
+      -- Keymap for merging a branch (merges branch being hovered if there is one)
+      vim.keymap.set('n', '<leader>gm', function()
+        execute_git_command_with_branch 'Git merge --no-ff'
+      end, { desc = 'Smart Merge Branch' })
+
+      -- Keymap for showing a list of branches
       vim.keymap.set('n', '<leader>gv', function()
         vim.cmd 'Git branch'
       end, { desc = 'View Git branches' })
+
+      -- Keymap for opening the diff mergetool
       vim.keymap.set('n', '<leader>gd', function()
         vim.cmd 'Gdiff'
       end, { desc = 'Open Git diff mergetool' })
-      vim.keymap.set('n', '<leader>gm', function()
-        local branch_name = vim.fn.input 'Branch name: '
-        if branch_name ~= '' then
-          vim.cmd('Git merge --no-ff ' .. branch_name)
-        end
-      end, { desc = 'Merge branch' })
     end,
   },
 }
