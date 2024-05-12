@@ -45,54 +45,34 @@ return {
           vim.keymap.set('n', '<leader>gc', ':q!<CR>', { buffer = true, desc = 'Cancel Commit' })
         end,
       })
-      vim.keymap.set('n', '<leader>gx', function()
-        local buf_name = vim.api.nvim_buf_get_name(0)
-        print('Buffer Name: ' .. buf_name) -- Debug print to understand what the buffer name is
-
-        -- Place your conditional logic here based on the debug output
-      end, { desc = 'Debug: Print buffer name and filetype' })
-      vim.keymap.set('n', '<leader>gb', function()
+      -- Common function to extract branch name and execute a provided Git command
+      local function execute_git_command_with_branch(cmd_base)
         local buf_name = vim.api.nvim_buf_get_name(0)
         -- Check if the buffer is likely a temporary buffer used for git operations
         if buf_name:match 'nvim%.%d+[/\\].+' then
-          -- Attempt to run the command exactly as it would be in Vimscript
-          vim.cmd('Git checkout ' .. vim.fn.expand '<cfile>' .. ' --')
+          -- Run the command exactly as it would be in Vimscript
+          local branch_name = vim.fn.expand '<cfile>'
+          if branch_name ~= '' then
+            vim.cmd(cmd_base .. ' ' .. branch_name)
+            print(cmd_base .. ' ' .. branch_name)
+          else
+            print 'No branch name found under cursor.'
+          end
         else
           -- Not in a branch-list buffer, prompt for a new branch name
           local branch_name = vim.fn.input 'Branch name: '
           if branch_name ~= '' then
-            vim.cmd('Git checkout -b ' .. branch_name)
+            vim.cmd(cmd_base .. ' ' .. branch_name)
           end
         end
+      end
+
+      vim.keymap.set('n', '<leader>gb', function()
+        execute_git_command_with_branch 'Git checkout'
       end, { desc = 'Smart Checkout Branch' })
-      vim.keymap.set('n', '<leader>gv', function()
-        vim.cmd 'Git branch'
-      end, { desc = 'View Git branches' })
-      vim.keymap.set('n', '<leader>gd', function()
-        vim.cmd 'Gdiff'
-      end, { desc = 'Open Git diff mergetool' })
+
       vim.keymap.set('n', '<leader>gm', function()
-        local buf_name = vim.api.nvim_buf_get_name(0)
-        -- Determine if the buffer name suggests a branch listing
-        if buf_name:match 'nvim%.%d+[/\\].+' then
-          -- Attempt to get the branch name directly under the cursor
-          local branch_name = vim.fn.getline '.'
-          -- Check if the line has a valid branch name
-          if branch_name:match '^%s*[%w-_.]+%s*$' then
-            -- Strip unwanted spaces if any
-            branch_name = branch_name:match '^%s*(.-)%s*$'
-            -- Execute the merge command
-            vim.cmd('Git merge --no-ff ' .. branch_name)
-          else
-            print 'No valid branch name under cursor.'
-          end
-        else
-          -- Not in a branch-list buffer, prompt for a new branch name
-          local branch_name = vim.fn.input 'Branch name to merge: '
-          if branch_name ~= '' then
-            vim.cmd('Git merge --no-ff ' .. branch_name)
-          end
-        end
+        execute_git_command_with_branch 'Git merge --no-ff'
       end, { desc = 'Smart Merge Branch' })
     end,
   },
