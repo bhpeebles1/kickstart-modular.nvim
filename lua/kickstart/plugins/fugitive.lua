@@ -83,11 +83,28 @@ return {
         vim.cmd 'Gdiff'
       end, { desc = 'Open Git diff mergetool' })
       vim.keymap.set('n', '<leader>gm', function()
-        local branch_name = vim.fn.input 'Branch name: '
-        if branch_name ~= '' then
-          vim.cmd('Git merge --no-ff ' .. branch_name)
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        -- Determine if the buffer name suggests a branch listing
+        if buf_name:match 'nvim%.%d+[/\\].+' then
+          -- Attempt to get the branch name directly under the cursor
+          local branch_name = vim.fn.getline '.'
+          -- Check if the line has a valid branch name
+          if branch_name:match '^%s*[%w-_.]+%s*$' then
+            -- Strip unwanted spaces if any
+            branch_name = branch_name:match '^%s*(.-)%s*$'
+            -- Execute the merge command
+            vim.cmd('Git merge --no-ff ' .. branch_name)
+          else
+            print 'No valid branch name under cursor.'
+          end
+        else
+          -- Not in a branch-list buffer, prompt for a new branch name
+          local branch_name = vim.fn.input 'Branch name to merge: '
+          if branch_name ~= '' then
+            vim.cmd('Git merge --no-ff ' .. branch_name)
+          end
         end
-      end, { desc = 'Merge branch' })
+      end, { desc = 'Smart Merge Branch' })
     end,
   },
 }
