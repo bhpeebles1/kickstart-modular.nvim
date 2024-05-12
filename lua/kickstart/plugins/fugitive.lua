@@ -56,13 +56,20 @@ return {
           vim.keymap.set('n', '<leader>gc', ':q!<CR>', { buffer = true, desc = 'Cancel Commit' })
         end,
       })
+      vim.keymap.set('n', '<leader>gx', function()
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        print('Buffer Name: ' .. buf_name) -- Debug print to understand what the buffer name is
+
+        -- Place your conditional logic here based on the debug output
+      end, { desc = 'Debug: Print buffer name and filetype' })
       vim.keymap.set('n', '<leader>gb', function()
-        -- Check if in the Git branches buffer
-        if vim.bo.filetype == 'fugitive' and vim.api.nvim_buf_get_name(0):match 'fugitive://.*/%.git//' then
-          -- Execute the 'coo' command to checkout the branch under the cursor
-          vim.cmd 'normal! coo'
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        -- Check if the buffer is likely a temporary buffer used for git operations
+        if buf_name:match 'nvim%.%d+[/\\].+' then
+          -- Attempt to run the command exactly as it would be in Vimscript
+          vim.cmd('Git checkout ' .. vim.fn.expand '<cfile>' .. ' --')
         else
-          -- Not in the branches buffer, ask for a branch name to create a new one
+          -- Not in a branch-list buffer, prompt for a new branch name
           local branch_name = vim.fn.input 'Branch name: '
           if branch_name ~= '' then
             vim.cmd('Git checkout -b ' .. branch_name)
