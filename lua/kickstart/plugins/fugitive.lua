@@ -66,14 +66,25 @@ return {
           end
         end
       end
-
+      -- Keymap for checking out a branch (checks out branch being hovered if there is one)
       vim.keymap.set('n', '<leader>gb', function()
         execute_git_command_with_branch 'Git checkout'
       end, { desc = 'Smart Checkout Branch' })
 
+      -- Keymap for merging a branch (merges branch being hovered if there is one)
       vim.keymap.set('n', '<leader>gm', function()
         execute_git_command_with_branch 'Git merge --no-ff'
       end, { desc = 'Smart Merge Branch' })
+
+      -- Keymap for showing a list of branches
+      vim.keymap.set('n', '<leader>gv', function()
+        vim.cmd 'Git branch'
+      end, { desc = 'View Git branches' })
+
+      -- Keymap for opening the diff mergetool
+      vim.keymap.set('n', '<leader>gd', function()
+        vim.cmd 'Gdiff'
+      end, { desc = 'Open Git diff mergetool' })
     end,
   },
 }
