@@ -27,15 +27,6 @@ require('lazy').setup({
 
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
-
-  require 'kickstart/plugins/fugitive',
-
-  require 'kickstart/plugins/trouble',
-
-  require 'kickstart/plugins/harpoon',
-
-  require 'kickstart/plugins/undotree',
-
   require 'kickstart/plugins/gitsigns',
 
   require 'kickstart/plugins/which-key',
@@ -76,7 +67,7 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
