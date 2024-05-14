@@ -45,6 +45,7 @@ return {
           vim.keymap.set('n', '<leader>gc', ':q!<CR>', { buffer = true, desc = 'Cancel Commit' })
         end,
       })
+
       -- Common function to extract branch name and execute a provided Git command
       local function execute_git_command_with_branch(cmd_base)
         local buf_name = vim.api.nvim_buf_get_name(0)
@@ -62,7 +63,15 @@ return {
           -- Not in a branch-list buffer, prompt for a new branch name
           local branch_name = vim.fn.input 'Branch name: '
           if branch_name ~= '' then
-            vim.cmd(cmd_base .. ' ' .. branch_name)
+            -- Check if the branch exists
+            vim.fn.systemlist('git rev-parse --verify ' .. branch_name)
+            if vim.v.shell_error == 0 then
+              -- Branch exists, check it out
+              vim.cmd(cmd_base .. ' ' .. branch_name)
+            else
+              -- Branch does not exist, create it
+              vim.cmd('Git checkout -b ' .. branch_name)
+            end
           end
         end
       end
