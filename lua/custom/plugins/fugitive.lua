@@ -32,11 +32,12 @@ return {
 
       -- Keymaps for diffget operations with descriptions
       vim.keymap.set('n', 'gf', function()
-        vim.cmd 'diffget //2'
-      end, { desc = 'Get diff from LEFT' })
+        vim.cmd 'diffget LO'
+      end, { desc = 'Pick changes from Local (Left) file' })
+
       vim.keymap.set('n', 'gj', function()
-        vim.cmd 'diffget //3'
-      end, { desc = 'Get diff from RIGHT' })
+        vim.cmd 'diffget REM'
+      end, { desc = 'Pick changes from Remote (Right) file' })
 
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'gitcommit',
