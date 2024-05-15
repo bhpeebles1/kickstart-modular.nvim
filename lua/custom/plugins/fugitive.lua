@@ -94,6 +94,11 @@ return {
       vim.keymap.set('n', '<leader>gd', function()
         vim.cmd 'Gdiff'
       end, { desc = 'Open Git diff mergetool' })
+
+      -- Keymap for viewing remote branches
+      vim.keymap.set('n', '<leader>gr', function()
+        vim.cmd 'Git branch -r'
+      end, { desc = 'View remote branches' })
     end,
   },
 }
