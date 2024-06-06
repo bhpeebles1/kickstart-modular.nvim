@@ -26,15 +26,15 @@ return {
     vim.keymap.set('n', '<leader>xl', function() require('trouble').toggle 'loclist' end, { desc = 'Loc List' })
     vim.keymap.set('n', 'gR', function() require('trouble').toggle 'lsp_references' end, { desc = 'LSP References' }) ]]
 
-    local trouble = require 'trouble.providers.telescope'
+    local trouble = require 'trouble.sources.telescope'
 
     local telescope = require 'telescope'
 
     telescope.setup {
       defaults = {
         mappings = {
-          i = { ['<c-t>'] = trouble.open_with_trouble },
-          n = { ['<c-t>'] = trouble.open_with_trouble },
+          i = { ['<c-t>'] = trouble.open},
+          n = { ['<c-t>'] = trouble.open},
         },
       },
     }
