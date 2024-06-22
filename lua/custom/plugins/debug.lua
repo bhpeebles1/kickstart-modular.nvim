@@ -77,7 +77,7 @@ return {
       windows = { indent = 1 },
     }
 
-    vim.keymap.set('n', '<F0>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    vim.keymap.set('n', '<F10>', dapui.toggle, { desc = 'Debug: See last session result.' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
