@@ -21,6 +21,7 @@ return {
     }
 
     -- Basic debugging keymaps
+    vim.keymap.set('n', '<F5>', dap.terminate, { desc = 'Debug: Stop Debugger' })
     vim.keymap.set('n', '<F6>', dap.continue, { desc = 'Debug: Start/Continue' })
     vim.keymap.set('n', '<F7>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F8>', dap.step_over, { desc = 'Debug: Step Over' })
@@ -118,9 +119,20 @@ return {
       },
     }
 
+    local function get_python_path()
+      local venv_path = vim.fn.getcwd() .. '/venv'
+      if vim.fn.executable(venv_path .. '/bin/python') == 1 then
+        return venv_path .. '/bin/python'
+      elseif vim.fn.executable(venv_path .. '/Scripts/python.exe') == 1 then
+        return venv_path .. '/Scripts/python.exe'
+      else
+        return 'python'
+      end
+    end
+
     dap.adapters.python = {
       type = 'executable',
-      command = 'python',
+      command = get_python_path(),
       args = { '-m', 'debugpy.adapter' },
     }
 
@@ -130,10 +142,7 @@ return {
         request = 'launch',
         name = 'Launch file',
         program = '${file}',
-        pythonPath = function()
-          return 'python'
-          -- return 'C:\\Users\\blake\\AppData\\Local\\Programs\\Python\\Python312'
-        end,
+        pythonPath = get_python_path()
       },
     }
 
