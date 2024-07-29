@@ -1,5 +1,5 @@
 return {
-  --[[ {
+  {
     'tpope/vim-fugitive',
     config = function()
       -- Basic Git command
@@ -101,5 +101,5 @@ return {
         vim.cmd 'Git branch -r'
       end, { desc = 'View remote branches' })
     end,
-  }, ]]
+  },
 }
