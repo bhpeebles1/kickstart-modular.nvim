@@ -35,9 +35,9 @@ return {
         vim.cmd 'diffget LO'
       end, { desc = 'Pick changes from Local (Left) file' })
 
-      vim.keymap.set('n', 'gj', function()
+      --[[ vim.keymap.set('n', 'gj', function()
         vim.cmd 'diffget REM'
-      end, { desc = 'Pick changes from Remote (Right) file' })
+      end, { desc = 'Pick changes from Remote (Right) file' }) ]]
 
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'gitcommit',
