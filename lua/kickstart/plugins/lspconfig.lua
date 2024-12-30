@@ -198,7 +198,7 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'tsserver',
+        'ts_ls',
         'eslint',
         'tailwindcss',
         'stylelint_lsp',
