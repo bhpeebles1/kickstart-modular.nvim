@@ -23,4 +23,9 @@ function LineNumberColors()
   vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#b588e8', bold = true })
 end
 
+vim.opt.tabstop = 2       -- Number of spaces a <Tab> counts for
+vim.opt.shiftwidth = 2    -- Size of an indent
+vim.opt.softtabstop = 2   -- Number of spaces for <Tab> in insert mode
+vim.opt.expandtab = true  -- Convert tabs to spaces
+
 LineNumberColors()
