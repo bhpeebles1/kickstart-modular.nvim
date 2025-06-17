@@ -25,35 +25,49 @@ return {
     'leoluz/nvim-dap-go',
   },
   keys = {
-    -- Basic debugging keymaps, feel free to change to your liking!
     {
       '<F5>',
+      function()
+        require('dap').terminate()
+      end,
+      desc = 'Debug: Stop Debugger',
+    },
+    {
+      '<F6>',
       function()
         require('dap').continue()
       end,
       desc = 'Debug: Start/Continue',
     },
     {
-      '<F1>',
+      '<F7>',
       function()
         require('dap').step_into()
       end,
       desc = 'Debug: Step Into',
     },
     {
-      '<F2>',
+      '<F8>',
       function()
         require('dap').step_over()
       end,
       desc = 'Debug: Step Over',
     },
     {
-      '<F3>',
+      '<F9>',
       function()
         require('dap').step_out()
       end,
       desc = 'Debug: Step Out',
     },
+    {
+      '<F10>',
+      function()
+        require('dapui').toggle()
+      end,
+      desc = 'Debug: See last session result.',
+    },
+
     {
       '<leader>b',
       function()
@@ -68,13 +82,14 @@ return {
       end,
       desc = 'Debug: Set Breakpoint',
     },
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+
     {
-      '<F7>',
+      '<leader>dq',
       function()
-        require('dapui').toggle()
+        require('dap').terminate()
+        require('dapui').close()
       end,
-      desc = 'Debug: See last session result.',
+      desc = 'Debug: Quit Debugger',
     },
   },
   config = function()
@@ -82,30 +97,36 @@ return {
     local dapui = require 'dapui'
 
     require('mason-nvim-dap').setup {
-      -- Makes a best effort to setup the various debuggers with
-      -- reasonable debug configurations
       automatic_installation = true,
-
-      -- You can provide additional configuration to the handlers,
-      -- see mason-nvim-dap README for more information
       handlers = {},
-
-      -- You'll need to check that you have the required things installed
-      -- online, please don't ask me how to install them :)
       ensure_installed = {
-        -- Update this to ensure that you have the debuggers for the langs you want
-        'delve',
+        'delve', -- Go
+        'php-debug-adapter', -- PHP / Xdebug
+        'python', -- debugpy (Python)
       },
     }
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
-    dapui.setup {
-      -- Set icons to characters that are more likely to work in every terminal.
-      --    Feel free to remove or use ones that you like more! :)
-      --    Don't feel like these are good choices.
+    require('dapui').setup {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+
+      mappings = {
+        expand = 'o',
+        open = 'O',
+        remove = 'd',
+        edit = 'e',
+        repl = 'r',
+      },
+
+      element_mappings = {},
+
+      expand_lines = false,
+      force_buffers = false,
+
       controls = {
+        enabled = true,
+        element = 'repl',
         icons = {
           pause = '⏸',
           play = '▶',
@@ -118,8 +139,52 @@ return {
           disconnect = '⏏',
         },
       },
+
+      layouts = {
+        {
+          elements = {
+            { id = 'scopes', size = 0.7 },
+            { id = 'breakpoints', size = 0.1 },
+            { id = 'stacks', size = 0.1 },
+            { id = 'watches', size = 0.1 },
+          },
+          size = 60,
+          position = 'left',
+        },
+        {
+          elements = { 'repl', 'console' },
+          size = 15,
+          position = 'bottom',
+        },
+      },
+
+      floating = {
+        max_height = nil,
+        max_width = nil,
+        border = 'single',
+        mappings = { close = { 'q', '<Esc>' } },
+      },
+
+      windows = { indent = 1 },
+
+      render = {
+        max_type_length = nil,
+        indent = 1, -- <— add this to satisfy the type
+      },
     }
 
+
+    -- swallow all telemetry output events
+    dap.listeners.before.event_output['filter_telemetry'] = function(_, body)
+      if body.category == 'telemetry' then
+        return true -- returning true here stops further handling
+      end
+    end
+
+    -- swallow the raw debugpySockets event
+    dap.listeners.before['debugpySockets']['filter_sockets'] = function()
+      return true
+    end
     -- Change breakpoint icons
     -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
     -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
